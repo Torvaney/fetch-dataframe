@@ -9,18 +9,12 @@ import config
 
 
 def get_pymysql_connection():
-    return pymysql.connect(config.DB)
-
-
-def get_connection():
-    connection = peewee.MySQLDatabase(config.DB)
-    connection.connect()
-    return connection
+    return pymysql.connect(**config.DB)
 
 
 def fetch_dataframe(query_file, params=None):
-    sql_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sql')
-    with open(sql_path + query_file, "r") as query_file:
+    sql_path = os.path.join(os.path.dirname(__file__), 'sql', query_file)
+    with open(sql_path, "r") as query_file:
         connection = get_pymysql_connection()
         query = query_file.read()
         if params is not None:
@@ -31,9 +25,9 @@ def fetch_dataframe(query_file, params=None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('sql-file', type=str, help='Name of query file.')
-    parser.add_argument('data-file', type=str, help='Path to output data.')
-    args = parser.parge_args()
+    parser.add_argument('sqlpath', type=str, help='Name of query file.')
+    parser.add_argument('datapath', type=str, help='Path to output data.')
+    args = parser.parse_args()
 
-    data = fetch_dataframe(args.sql_file)
-    data.to_csv(args.data_file)
+    data = fetch_dataframe(args.sqlpath)
+    data.to_csv(args.datapath, index=False, encoding='utf-8')
