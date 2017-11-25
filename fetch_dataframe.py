@@ -12,8 +12,7 @@ def get_pymysql_connection():
     return pymysql.connect(**config.DB)
 
 
-def fetch_dataframe(query_file, params=None):
-    sql_path = os.path.join(os.path.dirname(__file__), 'sql', query_file)
+def fetch_dataframe(sql_path, params=None):
     with open(sql_path, "r") as query_file:
         connection = get_pymysql_connection()
         query = query_file.read()
