@@ -36,9 +36,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     params = {}
-    for param in args.params:
-        kw, arg = param.split(':')
-        params[kw] = arg
+    if args.params:
+        for param in args.params:
+            kw, arg = param.split(':')
+            params[kw] = arg
 
     data = fetch_dataframe(args.sqlpath, args.config, params=params)
 
